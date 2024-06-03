@@ -1,0 +1,10 @@
+{
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "driver": "SQLite",
+      "name": "dirty_forms",
+      "database": "${workspaceFolder:dirty_forms}/data/local.db"
+    }
+  ]
+}
