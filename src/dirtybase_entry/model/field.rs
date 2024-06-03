@@ -1,5 +1,9 @@
 use dirtybase_contract::db::macros::DirtyTable;
-use dirtybase_db::base::helper::generate_ulid;
+use dirtybase_db::{
+    base::helper::generate_ulid,
+    field_values::FieldValue,
+    types::{ColumnAndValue, FromColumnAndValue},
+};
 
 #[derive(Debug, Clone)]
 enum FieldType {
@@ -11,6 +15,33 @@ enum FieldType {
 pub struct Field {
     id: String,
     field_type: FieldType,
+}
+
+impl From<FieldType> for FieldValue {
+    fn from(value: FieldType) -> Self {
+        Self::String(value.to_string())
+    }
+}
+
+impl From<&FieldType> for FieldValue {
+    fn from(value: &FieldType) -> Self {
+        Self::from(value.clone())
+    }
+}
+
+impl From<FieldValue> for FieldType {
+    fn from(value: FieldValue) -> Self {
+        match value {
+            FieldValue::String(v) => v.into(),
+            _ => panic!("value in data base is not a valid FieldType"),
+        }
+    }
+}
+
+impl FromColumnAndValue for FieldType {
+    fn from_column_value(column_and_value: ColumnAndValue) -> Self {
+        column_and_value.get("type_name").unwrap().clone().into()
+    }
 }
 
 impl Default for FieldType {
@@ -41,7 +72,7 @@ impl Into<FieldType> for String {
         match self.as_str() {
             "text" => FieldType::Text,
             "textarea" => FieldType::TextArea,
-            _ => FieldType::Text,
+            v @ _ => panic!("'{}' is not a valid field type", v),
         }
     }
 }
