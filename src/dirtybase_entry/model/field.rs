@@ -85,3 +85,52 @@ impl Field {
         }
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn test_string_field_type() {
+        let field_type_text: FieldType = "text".to_string().into();
+        let field_type_textarea: FieldType = "textarea".to_string().into();
+        assert_eq!(
+            "text",
+            field_type_text.to_string(),
+            "text should return a Text of the FieldType"
+        );
+        assert_eq!(
+            "textarea",
+            field_type_textarea.to_string(),
+            "textarea should return a TextArea of the FieldType"
+        );
+    }
+
+    #[test]
+    fn tes_from_field_value_for_field_type() {
+        let value = FieldValue::String("text".to_string());
+        let field_type_text: FieldType = value.into();
+
+        let value = FieldValue::String("textarea".to_string());
+        let field_type_textarea: FieldType = value.into();
+
+        assert_eq!(
+            "text",
+            field_type_text.to_string(),
+            "text should return a Text of the FieldType"
+        );
+        assert_eq!(
+            "textarea",
+            field_type_textarea.to_string(),
+            "textarea should return a Text of the FieldType"
+        );
+    }
+
+    #[test]
+    fn test_field_type_into_field_value() {
+        let text = FieldType::Text;
+        let value: FieldValue = text.into();
+
+        assert_eq!(&value.to_string(), "text");
+    }
+}
