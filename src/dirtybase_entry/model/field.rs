@@ -3,8 +3,8 @@ use dirtybase_db::base::helper::generate_ulid;
 
 #[derive(Debug, Clone)]
 enum FieldType {
-    TextArea,
     Text,
+    TextArea,
 }
 
 #[derive(Default, DirtyTable, Debug, Clone)]
@@ -13,6 +13,11 @@ pub struct Field {
     field_type: FieldType,
 }
 
+impl Default for FieldType {
+    fn default() -> Self {
+        FieldType::Text
+    }
+}
 impl ToString for FieldType {
     fn to_string(&self) -> String {
         match self {
