@@ -26,8 +26,6 @@ async fn seed_forms(app: &AppService) {
         _ => Vec::new(),
     };
 
-    dbg!("{:#?}", &forms);
-
     if forms.is_empty() {
         let form = Form::build_form("Foo form".to_string());
 
