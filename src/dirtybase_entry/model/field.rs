@@ -1,8 +1,9 @@
 use dirtybase_contract::db::macros::DirtyTable;
 use dirtybase_db::base::helper::generate_ulid;
 
-#[derive(Debug, Clone)]
-enum FieldType {
+#[derive(Default, Debug, Clone)]
+pub enum FieldType {
+    #[default]
     Text,
     TextArea,
 }
@@ -10,28 +11,15 @@ enum FieldType {
 #[derive(Default, DirtyTable, Debug, Clone)]
 pub struct Field {
     id: String,
-    field_type: FieldType,
+    field_type: String,
+    sections_id: String,
 }
 
-impl Default for FieldType {
-    fn default() -> Self {
-        FieldType::Text
-    }
-}
 impl ToString for FieldType {
     fn to_string(&self) -> String {
         match self {
-            Self::TextArea => "textarea".to_string(),
             Self::Text => "text".to_string(),
-        }
-    }
-}
-
-impl From<FieldType> for String {
-    fn from(value: FieldType) -> Self {
-        match value {
-            FieldType::Text => "text".to_string(),
-            FieldType::TextArea => "textarea".to_string(),
+            Self::TextArea => "textarea".to_string(),
         }
     }
 }
@@ -47,10 +35,11 @@ impl Into<FieldType> for String {
 }
 
 impl Field {
-    pub fn build_field(field_type: FieldType) -> Field {
+    pub fn build_field(field_type: FieldType, sections_id: String) -> Field {
         Field {
             id: generate_ulid(),
-            field_type,
+            field_type: field_type.to_string(),
+            sections_id,
         }
     }
 }
