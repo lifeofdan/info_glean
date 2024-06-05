@@ -4,8 +4,13 @@ mod http;
 mod migration;
 pub mod model;
 
-use dirtybase_app::axum::response::Html;
+use dirtybase_app::{
+    axum::{response::Html, Json},
+    core::{AppService, AppServiceExtractor},
+};
 use dirtybase_contract::{axum, dirtybase_config::DirtyConfig, http::RouterManager};
+
+use self::model::form::Form;
 
 pub struct Extension;
 
@@ -27,7 +32,35 @@ impl dirtybase_contract::ExtensionSetup for Extension {
         manager.general(None, |router| {
             router
                 .get("/foo", || async { Html("hello from foo") }, "foo")
-                .get("/bar", || async { Html("<h1>Bar</h1>") }, "bar")
+                .get("/bar", || async { "hi" }, "bar")
+        });
+
+        manager.api(Some("/v1"), |router| {
+            router.get(
+                "/forms",
+                |app_ext: AppServiceExtractor| async {
+                    let manager = app_ext.inner().schema_manger();
+                    let forms = match manager
+                        .select_from_table("forms", |builder| {
+                            builder.select_all().left_join(
+                                "sections",
+                                "section.forms_id",
+                                "=",
+                                "forms.id",
+                            );
+                        })
+                        .fetch_all_to::<Form>()
+                        .await
+                    {
+                        Ok(Some(f)) => f,
+                        _ => Vec::new(),
+                    };
+
+                    dbg!("{:#?}", &forms);
+                    Json(forms)
+                },
+                "forms",
+            )
         });
 
         manager
