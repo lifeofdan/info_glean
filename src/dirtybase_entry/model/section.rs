@@ -1,7 +1,8 @@
 use dirtybase_contract::db::macros::DirtyTable;
 use dirtybase_db::base::helper::generate_ulid;
+use serde::{Deserialize, Serialize};
 
-#[derive(Default, DirtyTable, Debug)]
+#[derive(Default, DirtyTable, Debug, Serialize, Deserialize)]
 pub struct Section {
     id: String,
     name: String,

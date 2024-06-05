@@ -10,3 +10,4 @@ dirtybase_db = {path = "../dirtybase/lib/db"}
 dirtybase_helper = {path = "../dirtybase/lib/helper"}
 tokio = { version = "1.38.0", features = ["full"] }
 dotenvy = "0.15.7"
+serde = "1.0.203"

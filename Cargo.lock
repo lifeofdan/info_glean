@@ -640,6 +640,7 @@ dependencies = [
  "dirtybase_db",
  "dirtybase_helper",
  "dotenvy",
+ "serde",
  "tokio",
 ]
 
